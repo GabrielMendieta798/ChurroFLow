@@ -5,6 +5,7 @@ export type MetodoPago = 'EFECTIVO' | 'TRANSFERENCIA' | 'MERCADO_PAGO';
 export type EstadoCaja = 'ABIERTA' | 'CERRADA';
 export type TipoMovimientoCaja = 'INGRESO' | 'EGRESO';
 export type TipoMovimientoStock = 'ENTRADA' | 'SALIDA' | 'AJUSTE' | 'PERDIDA';
+export type TipoCliente = 'MINORISTA' | 'MAYORISTA';
 
 export interface User {
   id: string;
@@ -95,6 +96,37 @@ export interface Proveedor {
   contacto?: string;
   telefono?: string;
   email?: string;
+}
+
+export interface Cliente {
+  id: string;
+  nombre: string;
+  cuit?: string;
+  contacto?: string;
+  telefono?: string;
+  email?: string;
+  direccion?: string;
+  tipo: TipoCliente;
+  notas?: string;
+  activo: boolean;
+  listaPrecioId?: string;
+  listaPrecio?: ListaPrecio;
+}
+
+export interface ListaPrecioItem {
+  id: string;
+  productoId: string;
+  producto: Producto;
+  precio: number;
+}
+
+export interface ListaPrecio {
+  id: string;
+  nombre: string;
+  descripcion?: string;
+  activo: boolean;
+  items: ListaPrecioItem[];
+  clientes?: { id: string; nombre: string }[];
 }
 
 export interface CompraItem {

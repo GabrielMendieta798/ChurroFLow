@@ -11,6 +11,8 @@ import { ComprasModule } from './compras/compras.module';
 import { StockModule } from './stock/stock.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
+import { ClientesModule } from './clientes/clientes.module';
+import { ListasPrecioModule } from './listas-precio/listas-precio.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { ProveedoresModule } from './proveedores/proveedores.module';
     StockModule,
     DashboardModule,
     ProveedoresModule,
+    ClientesModule,
+    ListasPrecioModule,
   ],
 })
 export class AppModule {}

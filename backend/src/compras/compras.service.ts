@@ -12,7 +12,7 @@ export class ComprasService {
         proveedor: true,
         items: { include: { insumo: true } },
       },
-      orderBy: { fecha: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
@@ -32,16 +32,20 @@ export class ComprasService {
           proveedorId: dto.proveedorId,
           total,
           observaciones: dto.observaciones,
-          items: {
-            create: dto.items.map((i) => ({
-              insumoId: i.insumoId,
-              cantidad: i.cantidad,
-              costoUnit: i.costoUnit,
-              subtotal: i.cantidad * i.costoUnit,
-            })),
-          },
-        },
+        } as any,
       });
+
+      for (const item of dto.items) {
+        await tx.compraItem.create({
+          data: {
+            compraId: compra.id,
+            insumoId: item.insumoId,
+            cantidad: item.cantidad,
+            costoUnit: item.costoUnit,
+            subtotal: item.cantidad * item.costoUnit,
+          },
+        });
+      }
 
       for (const item of dto.items) {
         await tx.insumo.update({

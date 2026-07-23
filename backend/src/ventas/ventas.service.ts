@@ -50,17 +50,20 @@ export class VentasService {
           total,
           metodoPago: dto.metodoPago,
           observaciones: dto.observaciones,
-          items: {
-            create: dto.items.map((item) => ({
-              productoId: item.productoId,
-              cantidad: item.cantidad,
-              precioUnit: item.precioUnit,
-              subtotal: item.cantidad * item.precioUnit,
-            })),
-          },
-        },
-        include: { items: true },
+        } as any,
       });
+
+      for (const item of dto.items) {
+        await tx.ventaItem.create({
+          data: {
+            ventaId: venta.id,
+            productoId: item.productoId,
+            cantidad: item.cantidad,
+            precioUnit: item.precioUnit,
+            subtotal: item.cantidad * item.precioUnit,
+          },
+        });
+      }
 
       // Descontar stock según receta de cada producto
       for (const item of dto.items) {

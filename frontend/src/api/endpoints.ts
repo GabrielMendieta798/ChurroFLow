@@ -1,7 +1,7 @@
 import api from './client';
 import type {
-  Caja, Compra, DashboardResumen, Insumo, Producto,
-  Proveedor, StockMovimiento, User, Venta,
+  Caja, Cliente, Compra, DashboardResumen, Insumo, ListaPrecio,
+  Producto, Proveedor, StockMovimiento, User, Venta,
 } from '../types';
 
 // Auth
@@ -102,4 +102,24 @@ export const proveedoresApi = {
 export const usersApi = {
   getAll: () => api.get<User[]>('/users'),
   create: (data: Partial<User> & { password: string }) => api.post<User>('/users', data),
+};
+
+// Clientes
+export const clientesApi = {
+  getAll: () => api.get<Cliente[]>('/clientes'),
+  getOne: (id: string) => api.get<Cliente>(`/clientes/${id}`),
+  create: (data: Partial<Cliente>) => api.post<Cliente>('/clientes', data),
+  update: (id: string, data: Partial<Cliente>) => api.put<Cliente>(`/clientes/${id}`, data),
+  remove: (id: string) => api.delete(`/clientes/${id}`),
+};
+
+// Listas de Precio
+export const listasPrecioApi = {
+  getAll: () => api.get<ListaPrecio[]>('/listas-precio'),
+  getOne: (id: string) => api.get<ListaPrecio>(`/listas-precio/${id}`),
+  create: (data: { nombre: string; descripcion?: string; items: { productoId: string; precio: number }[] }) =>
+    api.post<ListaPrecio>('/listas-precio', data),
+  update: (id: string, data: { nombre?: string; descripcion?: string; items?: { productoId: string; precio: number }[] }) =>
+    api.put<ListaPrecio>(`/listas-precio/${id}`, data),
+  remove: (id: string) => api.delete(`/listas-precio/${id}`),
 };

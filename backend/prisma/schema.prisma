@@ -66,6 +66,11 @@ enum EstadoCompra {
   CANCELADA
 }
 
+enum TipoCliente {
+  MINORISTA
+  MAYORISTA
+}
+
 // ─── Modelos ─────────────────────────────────────────────
 
 model User {
@@ -98,8 +103,9 @@ model Producto {
   activo      Boolean   @default(true)
   deletedAt   DateTime?
 
-  receta     Receta?
-  ventaItems VentaItem[]
+  receta            Receta?
+  ventaItems        VentaItem[]
+  listaPrecioItems ListaPrecioItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -205,6 +211,7 @@ model Venta {
   total         Decimal     @db.Decimal(10, 2)
   metodoPago    MetodoPago
   observaciones String?
+  fecha         DateTime    @default(now())
   deletedAt     DateTime?
 
   createdAt DateTime @default(now())
@@ -213,7 +220,7 @@ model Venta {
   updatedBy String?
 
   @@index([empleadoId])
-  @@index([createdAt])
+  @@index([fecha])
   @@map("ventas")
 }
 
@@ -246,6 +253,58 @@ model Proveedor {
   updatedBy String?
 
   @@map("proveedores")
+}
+
+model Cliente {
+  id             String        @id @default(uuid())
+  nombre         String
+  cuit           String?       @unique
+  contacto       String?
+  telefono       String?
+  email          String?
+  direccion      String?
+  tipo           TipoCliente   @default(MINORISTA)
+  notas          String?
+  activo         Boolean       @default(true)
+  deletedAt      DateTime?
+  listaPrecioId  String?
+  listaPrecio    ListaPrecio?  @relation(fields: [listaPrecioId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@map("clientes")
+}
+
+model ListaPrecio {
+  id          String            @id @default(uuid())
+  nombre      String
+  descripcion String?
+  activo      Boolean           @default(true)
+  deletedAt   DateTime?
+  items       ListaPrecioItem[]
+  clientes    Cliente[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@map("listas_precio")
+}
+
+model ListaPrecioItem {
+  id             String      @id @default(uuid())
+  listaPrecioId String
+  listaPrecio    ListaPrecio @relation(fields: [listaPrecioId], references: [id], onDelete: Cascade)
+  productoId     String
+  producto       Producto    @relation(fields: [productoId], references: [id])
+  precio         Decimal     @db.Decimal(10, 2)
+
+  @@unique([listaPrecioId, productoId])
+  @@map("lista_precio_items")
 }
 
 model Compra {
