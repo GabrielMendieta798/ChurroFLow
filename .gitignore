@@ -47,3 +47,6 @@ Thumbs.db
 # Archivos temporales de editores
 *.swp
 *.swo
+
+# Changelog del proyecto
+CHANGELOG.md
