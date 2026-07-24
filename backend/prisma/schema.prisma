@@ -71,6 +71,13 @@ enum TipoCliente {
   MAYORISTA
 }
 
+enum EstadoProduccion {
+  PENDIENTE
+  EN_PROCESO
+  COMPLETADA
+  CANCELADA
+}
+
 // ─── Modelos ─────────────────────────────────────────────
 
 model User {
@@ -102,13 +109,16 @@ model Producto {
   precioCompra    Decimal?  @db.Decimal(10, 2)
   precioMayorista Decimal?  @db.Decimal(10, 2)
   margen          Decimal?  @db.Decimal(5, 2)
+  stockActual     Decimal   @default(0) @db.Decimal(10, 2)
+  stockMinimo     Decimal   @default(0) @db.Decimal(10, 2)
   categoria       Categoria
   activo          Boolean   @default(true)
   deletedAt       DateTime?
 
-  receta            Receta?
-  ventaItems        VentaItem[]
-  listaPrecioItems ListaPrecioItem[]
+  receta                Receta?
+  ventaItems            VentaItem[]
+  listaPrecioItems     ListaPrecioItem[]
+  ordenProducciones    OrdenProduccion[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -379,6 +389,29 @@ model StockMovimiento {
   @@index([insumoId])
   @@index([fecha])
   @@map("stock_movimientos")
+}
+
+model OrdenProduccion {
+  id             String            @id @default(uuid())
+  numero         String            @unique
+  productoId     String
+  producto       Producto          @relation(fields: [productoId], references: [id])
+  cantidad       Int
+  estado         EstadoProduccion  @default(PENDIENTE)
+  observaciones  String?
+  fechaInicio    DateTime?
+  fechaFin       DateTime?
+  deletedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([productoId])
+  @@index([estado])
+  @@index([createdAt])
+  @@map("ordenes_produccion")
 }
 
 model Secuencia {

@@ -28,6 +28,11 @@ export class CreateProductoDto {
   @Min(0)
   margen?: number;
 
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  stockMinimo?: number;
+
   @IsEnum(Categoria)
   categoria: Categoria;
 }

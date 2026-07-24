@@ -15,10 +15,11 @@ interface Form {
   precioCompra: string;
   precioMayorista: string;
   margen: string;
+  stockMinimo: string;
   categoria: Categoria;
 }
 
-const empty: Form = { nombre: '', descripcion: '', precio: '', precioCompra: '', precioMayorista: '', margen: '', categoria: 'CHURRO' };
+const empty: Form = { nombre: '', descripcion: '', precio: '', precioCompra: '', precioMayorista: '', margen: '', stockMinimo: '', categoria: 'CHURRO' };
 
 export default function Productos() {
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -38,6 +39,7 @@ export default function Productos() {
       precioCompra: form.precioCompra ? Number(form.precioCompra) : undefined,
       precioMayorista: form.precioMayorista ? Number(form.precioMayorista) : undefined,
       margen: form.margen ? Number(form.margen) : undefined,
+      stockMinimo: form.stockMinimo ? Number(form.stockMinimo) : 0,
     };
     if (editId) await productosApi.update(editId, data);
     else await productosApi.create(data);
@@ -55,6 +57,7 @@ export default function Productos() {
       precioCompra: p.precioCompra != null ? String(p.precioCompra) : '',
       precioMayorista: p.precioMayorista != null ? String(p.precioMayorista) : '',
       margen: p.margen != null ? String(p.margen) : '',
+      stockMinimo: String(p.stockMinimo),
       categoria: p.categoria,
     });
     setEditId(p.id);
@@ -116,6 +119,10 @@ export default function Productos() {
                 <label className="label">Precio de venta mayorista ($)</label>
                 <input type="number" value={form.precioMayorista} onChange={(e) => setForm({ ...form, precioMayorista: e.target.value })} className="input" min="0" step="0.01" />
               </div>
+              <div>
+                <label className="label">Stock mínimo</label>
+                <input type="number" value={form.stockMinimo} onChange={(e) => setForm({ ...form, stockMinimo: e.target.value })} className="input" min="0" step="1" />
+              </div>
               <div className="flex gap-3">
                 <button type="button" onClick={() => setShowForm(false)} className="btn-secondary flex-1 justify-center">Cancelar</button>
                 <button type="submit" className="btn-primary flex-1 justify-center">Guardar</button>
@@ -140,6 +147,14 @@ export default function Productos() {
               <div className="flex justify-between"><span className="text-gray-500">Margen</span><span className="font-medium">{detailProduct.margen != null ? `${detailProduct.margen}%` : '—'}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">Precio venta minorista</span><span className="font-bold text-brand-600">{fmt(detailProduct.precio)}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">Precio venta mayorista</span><span className="font-bold text-brand-600">{fmt(detailProduct.precioMayorista)}</span></div>
+              <hr />
+              <div className="flex justify-between">
+                <span className="text-gray-500">Stock actual</span>
+                <span className={`font-bold ${detailProduct.stockActual <= detailProduct.stockMinimo && detailProduct.stockMinimo > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  {detailProduct.stockActual}
+                </span>
+              </div>
+              <div className="flex justify-between"><span className="text-gray-500">Stock mínimo</span><span className="font-medium">{detailProduct.stockMinimo}</span></div>
               {detailProduct.descripcion && (
                 <>
                   <hr />
@@ -189,6 +204,9 @@ export default function Productos() {
               {p.precioCompra != null && <p>Compra: {fmt(p.precioCompra)}</p>}
               {p.margen != null && <p>Margen: {p.margen}%</p>}
               {p.precioMayorista != null && <p>Mayorista: {fmt(p.precioMayorista)}</p>}
+              <p className={p.stockActual <= p.stockMinimo && p.stockMinimo > 0 ? 'text-red-600 font-medium' : ''}>
+                Stock: {p.stockActual} (mín: {p.stockMinimo})
+              </p>
             </div>
             {p.descripcion && <p className="text-sm text-gray-500 mb-3">{p.descripcion}</p>}
             {p.receta && (

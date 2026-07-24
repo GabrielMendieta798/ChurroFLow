@@ -23,6 +23,8 @@ export interface Producto {
   precioCompra?: number;
   precioMayorista?: number;
   margen?: number;
+  stockActual: number;
+  stockMinimo: number;
   categoria: Categoria;
   activo: boolean;
   receta?: Receta;
@@ -186,4 +188,19 @@ export interface DashboardResumen {
   gananciaEstimada: number;
   productosMasVendidos: { nombre: string; cantidad: number; total: number }[];
   insumosBajoStock: Insumo[];
+}
+
+export type EstadoProduccion = 'PENDIENTE' | 'EN_PROCESO' | 'COMPLETADA' | 'CANCELADA';
+
+export interface OrdenProduccion {
+  id: string;
+  numero: string;
+  productoId: string;
+  producto: Producto;
+  cantidad: number;
+  estado: EstadoProduccion;
+  observaciones?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
+  createdAt: string;
 }

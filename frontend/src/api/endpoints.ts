@@ -1,7 +1,7 @@
 import api from './client';
 import type {
   Caja, Cliente, Compra, DashboardResumen, DireccionEntrega, Insumo, ListaPrecio,
-  Producto, Proveedor, StockMovimiento, User, Venta,
+  OrdenProduccion, Producto, Proveedor, StockMovimiento, User, Venta,
 } from '../types';
 
 // Auth
@@ -138,4 +138,17 @@ export const direccionesEntregaApi = {
   create: (data: Partial<DireccionEntrega>) => api.post<DireccionEntrega>('/direcciones-entrega', data),
   update: (id: string, data: Partial<DireccionEntrega>) => api.put<DireccionEntrega>(`/direcciones-entrega/${id}`, data),
   remove: (id: string) => api.delete(`/direcciones-entrega/${id}`),
+};
+
+// Produccion
+export const produccionApi = {
+  getAll: (estado?: string) => {
+    const params = estado ? `?estado=${estado}` : '';
+    return api.get<OrdenProduccion[]>(`/produccion${params}`);
+  },
+  getOne: (id: string) => api.get<OrdenProduccion>(`/produccion/${id}`),
+  create: (data: { productoId: string; cantidad: number; observaciones?: string }) =>
+    api.post<OrdenProduccion>('/produccion', data),
+  updateEstado: (id: string, estado: string) =>
+    api.patch<OrdenProduccion>(`/produccion/${id}/estado`, { estado }),
 };

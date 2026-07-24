@@ -15,6 +15,7 @@ import { ClientesModule } from './clientes/clientes.module';
 import { ListasPrecioModule } from './listas-precio/listas-precio.module';
 import { DireccionesEntregaModule } from './direcciones-entrega/direcciones-entrega.module';
 import { SharedModule } from './shared/shared.module';
+import { ProduccionModule } from './produccion/produccion.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { SharedModule } from './shared/shared.module';
     ClientesModule,
     ListasPrecioModule,
     DireccionesEntregaModule,
+    ProduccionModule,
   ],
 })
 export class AppModule {}
