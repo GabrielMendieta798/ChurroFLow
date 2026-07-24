@@ -8,9 +8,8 @@ export class ProductosService {
 
   findAll() {
     return this.prisma.producto.findMany({
-      where: { activo: true },
       include: { receta: { include: { items: { include: { insumo: true } } } } },
-      orderBy: [{ categoria: 'asc' }, { nombre: 'asc' }],
+      orderBy: [{ activo: 'desc' }, { categoria: 'asc' }, { nombre: 'asc' }],
     });
   }
 
@@ -31,5 +30,10 @@ export class ProductosService {
 
   remove(id: string) {
     return this.prisma.producto.update({ where: { id }, data: { activo: false } });
+  }
+
+  async toggleActivo(id: string) {
+    const producto = await this.prisma.producto.findUniqueOrThrow({ where: { id }, select: { activo: true } });
+    return this.prisma.producto.update({ where: { id }, data: { activo: !producto.activo } });
   }
 }

@@ -34,7 +34,7 @@ export default function POS() {
   const [categoriaActiva, setCategoriaActiva] = useState('TODOS');
 
   useEffect(() => {
-    productosApi.getAll().then((r) => setProductos(r.data));
+    productosApi.getAll().then((r) => setProductos(r.data.filter((p) => p.activo)));
     cajaApi.getActual().then((r) => setCaja(r.data));
   }, []);
 

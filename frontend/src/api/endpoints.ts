@@ -18,6 +18,7 @@ export const productosApi = {
   create: (data: Partial<Producto>) => api.post<Producto>('/productos', data),
   update: (id: string, data: Partial<Producto>) => api.put<Producto>(`/productos/${id}`, data),
   remove: (id: string) => api.delete(`/productos/${id}`),
+  toggleActivo: (id: string) => api.patch<Producto>(`/productos/${id}/toggle`),
 };
 
 // Insumos

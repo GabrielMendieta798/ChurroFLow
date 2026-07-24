@@ -17,7 +17,7 @@ export default function Recetas() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    productosApi.getAll().then((r) => setProductos(r.data));
+    productosApi.getAll().then((r) => setProductos(r.data.filter((p) => p.activo)));
     insumosApi.getAll().then((r) => setInsumos(r.data));
   }, []);
 
@@ -50,7 +50,7 @@ export default function Recetas() {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);
       // Reload productos to update recipe count
-      productosApi.getAll().then((r) => setProductos(r.data));
+      productosApi.getAll().then((r) => setProductos(r.data.filter((p) => p.activo)));
     } finally {
       setSaving(false);
     }

@@ -13,6 +13,21 @@ export class CreateProductoDto {
   @Min(0)
   precio: number;
 
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  precioCompra?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  precioMayorista?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  margen?: number;
+
   @IsEnum(Categoria)
   categoria: Categoria;
 }

@@ -26,7 +26,7 @@ export default function ListasPrecio() {
   const load = async () => {
     const [l, p] = await Promise.all([listasPrecioApi.getAll(), productosApi.getAll()]);
     setListas(l.data);
-    setProductos(p.data);
+    setProductos(p.data.filter((p) => p.activo));
   };
   useEffect(() => { load(); }, []);
 

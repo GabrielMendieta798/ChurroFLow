@@ -95,13 +95,16 @@ model User {
 }
 
 model Producto {
-  id          String    @id @default(uuid())
-  nombre      String
-  descripcion String?
-  precio      Decimal   @db.Decimal(10, 2)
-  categoria   Categoria
-  activo      Boolean   @default(true)
-  deletedAt   DateTime?
+  id              String    @id @default(uuid())
+  nombre          String
+  descripcion     String?
+  precio          Decimal   @db.Decimal(10, 2)
+  precioCompra    Decimal?  @db.Decimal(10, 2)
+  precioMayorista Decimal?  @db.Decimal(10, 2)
+  margen          Decimal?  @db.Decimal(5, 2)
+  categoria       Categoria
+  activo          Boolean   @default(true)
+  deletedAt       DateTime?
 
   receta            Receta?
   ventaItems        VentaItem[]

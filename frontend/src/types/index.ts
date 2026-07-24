@@ -20,6 +20,9 @@ export interface Producto {
   nombre: string;
   descripcion?: string;
   precio: number;
+  precioCompra?: number;
+  precioMayorista?: number;
+  margen?: number;
   categoria: Categoria;
   activo: boolean;
   receta?: Receta;

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -31,5 +31,10 @@ export class ProductosController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productosService.remove(id);
+  }
+
+  @Patch(':id/toggle')
+  toggleActivo(@Param('id') id: string) {
+    return this.productosService.toggleActivo(id);
   }
 }
