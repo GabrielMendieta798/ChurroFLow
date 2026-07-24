@@ -1,6 +1,6 @@
 import api from './client';
 import type {
-  Caja, Cliente, Compra, DashboardResumen, Insumo, ListaPrecio,
+  Caja, Cliente, Compra, DashboardResumen, DireccionEntrega, Insumo, ListaPrecio,
   Producto, Proveedor, StockMovimiento, User, Venta,
 } from '../types';
 
@@ -19,6 +19,11 @@ export const productosApi = {
   update: (id: string, data: Partial<Producto>) => api.put<Producto>(`/productos/${id}`, data),
   remove: (id: string) => api.delete(`/productos/${id}`),
   toggleActivo: (id: string) => api.patch<Producto>(`/productos/${id}/toggle`),
+  resolvePrice: (productoId: string, clienteId?: string) => {
+    const params = new URLSearchParams({ productoId });
+    if (clienteId) params.append('clienteId', clienteId);
+    return api.get<number>(`/productos/pricing?${params}`);
+  },
 };
 
 // Insumos
@@ -48,6 +53,7 @@ export const ventasApi = {
   },
   create: (data: {
     cajaId: string;
+    clienteId?: string;
     items: { productoId: string; cantidad: number; precioUnit: number }[];
     metodoPago: string;
     observaciones?: string;
@@ -123,4 +129,13 @@ export const listasPrecioApi = {
   update: (id: string, data: { nombre?: string; descripcion?: string; items?: { productoId: string; precio: number }[] }) =>
     api.put<ListaPrecio>(`/listas-precio/${id}`, data),
   remove: (id: string) => api.delete(`/listas-precio/${id}`),
+};
+
+// Direcciones de Entrega
+export const direccionesEntregaApi = {
+  getByCliente: (clienteId: string) => api.get<DireccionEntrega[]>(`/direcciones-entrega?clienteId=${clienteId}`),
+  getOne: (id: string) => api.get<DireccionEntrega>(`/direcciones-entrega/${id}`),
+  create: (data: Partial<DireccionEntrega>) => api.post<DireccionEntrega>('/direcciones-entrega', data),
+  update: (id: string, data: Partial<DireccionEntrega>) => api.put<DireccionEntrega>(`/direcciones-entrega/${id}`, data),
+  remove: (id: string) => api.delete(`/direcciones-entrega/${id}`),
 };

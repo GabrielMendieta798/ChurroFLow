@@ -7,19 +7,26 @@ export class ClientesService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return this.prisma.cliente.findMany({ where: { activo: true }, orderBy: { nombre: 'asc' } });
+    return this.prisma.cliente.findMany({
+      where: { activo: true },
+      include: { listaPrecio: true },
+      orderBy: { nombre: 'asc' },
+    });
   }
 
   findOne(id: string) {
-    return this.prisma.cliente.findUniqueOrThrow({ where: { id } });
+    return this.prisma.cliente.findUniqueOrThrow({
+      where: { id },
+      include: { listaPrecio: { include: { items: { include: { producto: true } } } } },
+    });
   }
 
   create(dto: CreateClienteDto) {
-    return this.prisma.cliente.create({ data: dto });
+    return this.prisma.cliente.create({ data: dto, include: { listaPrecio: true } });
   }
 
   update(id: string, dto: Partial<CreateClienteDto>) {
-    return this.prisma.cliente.update({ where: { id }, data: dto });
+    return this.prisma.cliente.update({ where: { id }, data: dto, include: { listaPrecio: true } });
   }
 
   remove(id: string) {

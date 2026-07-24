@@ -17,6 +17,7 @@ export class VentasService {
       where,
       include: {
         empleado: { select: { nombre: true } },
+        cliente: { select: { id: true, nombre: true, tipo: true } },
         items: { include: { producto: true } },
         caja: { select: { id: true, fechaApertura: true } },
       },
@@ -29,6 +30,7 @@ export class VentasService {
       where: { id },
       include: {
         empleado: { select: { nombre: true } },
+        cliente: { select: { id: true, nombre: true, tipo: true } },
         items: { include: { producto: true } },
       },
     });
@@ -47,6 +49,7 @@ export class VentasService {
         data: {
           empleadoId,
           cajaId: dto.cajaId,
+          clienteId: dto.clienteId || null,
           total,
           metodoPago: dto.metodoPago,
           observaciones: dto.observaciones,

@@ -209,6 +209,8 @@ model Venta {
   empleado      User        @relation(fields: [empleadoId], references: [id])
   cajaId        String
   caja          Caja        @relation(fields: [cajaId], references: [id])
+  clienteId     String?
+  cliente       Cliente?    @relation(fields: [clienteId], references: [id])
   estado        EstadoVenta @default(COMPLETADA)
   items         VentaItem[]
   total         Decimal     @db.Decimal(10, 2)
@@ -223,6 +225,7 @@ model Venta {
   updatedBy String?
 
   @@index([empleadoId])
+  @@index([clienteId])
   @@index([fecha])
   @@map("ventas")
 }
@@ -259,19 +262,21 @@ model Proveedor {
 }
 
 model Cliente {
-  id             String        @id @default(uuid())
+  id             String             @id @default(uuid())
   nombre         String
-  cuit           String?       @unique
+  cuit           String?            @unique
   contacto       String?
   telefono       String?
   email          String?
   direccion      String?
-  tipo           TipoCliente   @default(MINORISTA)
+  tipo           TipoCliente        @default(MINORISTA)
   notas          String?
-  activo         Boolean       @default(true)
+  activo         Boolean            @default(true)
   deletedAt      DateTime?
   listaPrecioId  String?
-  listaPrecio    ListaPrecio?  @relation(fields: [listaPrecioId], references: [id])
+  listaPrecio    ListaPrecio?       @relation(fields: [listaPrecioId], references: [id])
+  direcciones    DireccionEntrega[]
+  ventas         Venta[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -279,6 +284,23 @@ model Cliente {
   updatedBy String?
 
   @@map("clientes")
+}
+
+model DireccionEntrega {
+  id        String  @id @default(uuid())
+  clienteId String
+  cliente   Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  alias     String
+  direccion String
+  barrio    String?
+  ciudad    String?
+  notas     String?
+  activo    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("direcciones_entrega")
 }
 
 model ListaPrecio {

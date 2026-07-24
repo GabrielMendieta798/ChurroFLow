@@ -13,10 +13,13 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
 import { ClientesModule } from './clientes/clientes.module';
 import { ListasPrecioModule } from './listas-precio/listas-precio.module';
+import { DireccionesEntregaModule } from './direcciones-entrega/direcciones-entrega.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
     PrismaModule,
+    SharedModule,
     AuthModule,
     UsersModule,
     ProductosModule,
@@ -30,6 +33,7 @@ import { ListasPrecioModule } from './listas-precio/listas-precio.module';
     ProveedoresModule,
     ClientesModule,
     ListasPrecioModule,
+    DireccionesEntregaModule,
   ],
 })
 export class AppModule {}

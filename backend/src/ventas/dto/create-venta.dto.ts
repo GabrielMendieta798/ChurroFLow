@@ -19,6 +19,10 @@ export class CreateVentaDto {
   @IsString()
   cajaId: string;
 
+  @IsOptional()
+  @IsString()
+  clienteId?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => VentaItemDto)

@@ -63,6 +63,7 @@ export interface VentaItem {
 export interface Venta {
   id: string;
   empleado: { nombre: string };
+  cliente?: { id: string; nombre: string; tipo: TipoCliente };
   cajaId: string;
   items: VentaItem[];
   total: number;
@@ -114,6 +115,18 @@ export interface Cliente {
   activo: boolean;
   listaPrecioId?: string;
   listaPrecio?: ListaPrecio;
+  direcciones?: DireccionEntrega[];
+}
+
+export interface DireccionEntrega {
+  id: string;
+  clienteId: string;
+  alias: string;
+  direccion: string;
+  barrio?: string;
+  ciudad?: string;
+  notas?: string;
+  activo: boolean;
 }
 
 export interface ListaPrecioItem {

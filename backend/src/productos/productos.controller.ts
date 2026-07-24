@@ -1,16 +1,31 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { PricingService } from '../shared/pricing.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('productos')
 export class ProductosController {
-  constructor(private productosService: ProductosService) {}
+  constructor(
+    private productosService: ProductosService,
+    private pricingService: PricingService,
+  ) {}
 
   @Get()
   findAll() {
     return this.productosService.findAll();
+  }
+
+  @Get('pricing')
+  resolvePrice(@Query('productoId') productoId: string, @Query('clienteId') clienteId?: string) {
+    return this.pricingService.resolvePrice(productoId, clienteId);
+  }
+
+  @Get('pricing/batch')
+  resolvePrices(@Query('productoIds') productoIds: string, @Query('clienteId') clienteId?: string) {
+    const ids = productoIds.split(',');
+    return this.pricingService.resolvePrices(ids, clienteId);
   }
 
   @Get(':id')

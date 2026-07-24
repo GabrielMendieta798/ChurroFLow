@@ -78,6 +78,7 @@ export default function Ventas() {
               <tr className="text-left text-xs text-gray-500 border-b">
                 <th className="pb-3 font-medium">Fecha y hora</th>
                 <th className="pb-3 font-medium">Empleado</th>
+                <th className="pb-3 font-medium">Cliente</th>
                 <th className="pb-3 font-medium">Productos</th>
                 <th className="pb-3 font-medium">Método</th>
                 <th className="pb-3 font-medium text-right">Total</th>
@@ -90,6 +91,18 @@ export default function Ventas() {
                     {format(new Date(v.fecha), "dd/MM HH:mm")}
                   </td>
                   <td className="py-3 text-sm">{v.empleado.nombre}</td>
+                  <td className="py-3 text-sm">
+                    {v.cliente ? (
+                      <div>
+                        <span className="font-medium text-gray-900">{v.cliente.nombre}</span>
+                        <span className={`ml-1 badge text-xs ${v.cliente.tipo === 'MAYORISTA' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+                          {v.cliente.tipo === 'MINORISTA' ? 'Min' : 'May'}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
+                  </td>
                   <td className="py-3">
                     <div className="flex flex-wrap gap-1">
                       {v.items.map((item) => (

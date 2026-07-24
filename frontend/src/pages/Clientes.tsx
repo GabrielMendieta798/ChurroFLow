@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { clientesApi } from '../api/endpoints';
-import type { Cliente, TipoCliente } from '../types';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { clientesApi, listasPrecioApi } from '../api/endpoints';
+import type { Cliente, ListaPrecio, TipoCliente } from '../types';
+import { Plus, Pencil, Trash2, MapPin } from 'lucide-react';
+import DireccionesEntrega from '../components/DireccionesEntrega';
 
 const TIPOS: TipoCliente[] = ['MINORISTA', 'MAYORISTA'];
 
@@ -14,17 +15,24 @@ interface Form {
   direccion: string;
   tipo: TipoCliente;
   notas: string;
+  listaPrecioId: string;
 }
 
-const empty: Form = { nombre: '', cuit: '', contacto: '', telefono: '', email: '', direccion: '', tipo: 'MINORISTA', notas: '' };
+const empty: Form = { nombre: '', cuit: '', contacto: '', telefono: '', email: '', direccion: '', tipo: 'MINORISTA', notas: '', listaPrecioId: '' };
 
 export default function Clientes() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [listas, setListas] = useState<ListaPrecio[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<Form>(empty);
   const [editId, setEditId] = useState<string | null>(null);
+  const [direccionesClienteId, setDireccionesClienteId] = useState<string | null>(null);
 
-  const load = () => clientesApi.getAll().then((r) => setClientes(r.data));
+  const load = async () => {
+    const [c, l] = await Promise.all([clientesApi.getAll(), listasPrecioApi.getAll()]);
+    setClientes(c.data);
+    setListas(l.data);
+  };
   useEffect(() => { load(); }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,6 +40,7 @@ export default function Clientes() {
     const data: Partial<Cliente> = {
       nombre: form.nombre,
       tipo: form.tipo,
+      listaPrecioId: form.listaPrecioId || undefined,
     };
     if (form.cuit) data.cuit = form.cuit;
     if (form.contacto) data.contacto = form.contacto;
@@ -57,6 +66,7 @@ export default function Clientes() {
       direccion: c.direccion || '',
       tipo: c.tipo,
       notas: c.notas || '',
+      listaPrecioId: c.listaPrecioId || '',
     });
     setEditId(c.id);
     setShowForm(true);
@@ -97,9 +107,16 @@ export default function Clientes() {
                 <div>
                   <label className="label">Tipo</label>
                   <select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value as TipoCliente })} className="input">
-                    {TIPOS.map((t) => <option key={t} value={t}>{t}</option>)}
+                    {TIPOS.map((t) => <option key={t} value={t}>{t === 'MINORISTA' ? 'Minorista' : 'Mayorista'}</option>)}
                   </select>
                 </div>
+              </div>
+              <div>
+                <label className="label">Lista de Precios</label>
+                <select value={form.listaPrecioId} onChange={(e) => setForm({ ...form, listaPrecioId: e.target.value })} className="input">
+                  <option value="">Sin lista asignada</option>
+                  {listas.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
+                </select>
               </div>
               <div>
                 <label className="label">Contacto</label>
@@ -132,6 +149,13 @@ export default function Clientes() {
         </div>
       )}
 
+      {direccionesClienteId && (
+        <DireccionesEntrega
+          clienteId={direccionesClienteId}
+          onClose={() => setDireccionesClienteId(null)}
+        />
+      )}
+
       <div className="card">
         <table className="w-full">
           <thead>
@@ -139,6 +163,7 @@ export default function Clientes() {
               <th className="pb-3 font-medium">Nombre</th>
               <th className="pb-3 font-medium">CUIT</th>
               <th className="pb-3 font-medium">Tipo</th>
+              <th className="pb-3 font-medium">Lista de Precios</th>
               <th className="pb-3 font-medium">Contacto</th>
               <th className="pb-3 font-medium">Teléfono</th>
               <th className="pb-3 font-medium">Email</th>
@@ -152,14 +177,18 @@ export default function Clientes() {
                 <td className="py-3 text-sm text-gray-500 font-mono">{c.cuit || '-'}</td>
                 <td className="py-3">
                   <span className={`badge ${c.tipo === 'MAYORISTA' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
-                    {c.tipo}
+                    {c.tipo === 'MINORISTA' ? 'Minorista' : 'Mayorista'}
                   </span>
                 </td>
+                <td className="py-3 text-sm text-gray-500">{c.listaPrecio?.nombre || '-'}</td>
                 <td className="py-3 text-sm text-gray-500">{c.contacto || '-'}</td>
                 <td className="py-3 text-sm text-gray-500">{c.telefono || '-'}</td>
                 <td className="py-3 text-sm text-gray-500">{c.email || '-'}</td>
                 <td className="py-3">
                   <div className="flex gap-2">
+                    <button onClick={() => setDireccionesClienteId(c.id)} className="text-gray-400 hover:text-gray-700" title="Direcciones de entrega">
+                      <MapPin size={16} />
+                    </button>
                     <button onClick={() => handleEdit(c)} className="text-gray-400 hover:text-gray-700">
                       <Pencil size={16} />
                     </button>
