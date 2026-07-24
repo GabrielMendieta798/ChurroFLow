@@ -191,6 +191,8 @@ export interface DashboardResumen {
 }
 
 export type EstadoProduccion = 'PENDIENTE' | 'EN_PROCESO' | 'COMPLETADA' | 'CANCELADA';
+export type EstadoPedido = 'BORRADOR' | 'CONFIRMADO' | 'PREPARANDO' | 'LISTO' | 'EN_ENTREGA' | 'ENTREGADO' | 'CANCELADO';
+export type EstadoReparto = 'PENDIENTE' | 'EN_CURSO' | 'COMPLETADO';
 
 export interface OrdenProduccion {
   id: string;
@@ -202,5 +204,47 @@ export interface OrdenProduccion {
   observaciones?: string;
   fechaInicio?: string;
   fechaFin?: string;
+  createdAt: string;
+}
+
+export interface PedidoItem {
+  id: string;
+  productoId: string;
+  producto: Producto;
+  cantidad: number;
+  precioUnit: number;
+  subtotal: number;
+}
+
+export interface Pedido {
+  id: string;
+  numero: string;
+  clienteId: string;
+  cliente: { id: string; nombre: string; tipo: TipoCliente };
+  direccionEntregaId?: string;
+  direccionEntrega?: DireccionEntrega;
+  estado: EstadoPedido;
+  observaciones?: string;
+  fechaEntrega?: string;
+  reparto?: { id: string; numero: string };
+  items: PedidoItem[];
+  total: number;
+  createdAt: string;
+}
+
+export interface ZonaReparto {
+  id: string;
+  nombre: string;
+  activo: boolean;
+}
+
+export interface Reparto {
+  id: string;
+  numero: string;
+  zonaReparto?: ZonaReparto;
+  estado: EstadoReparto;
+  fecha: string;
+  observaciones?: string;
+  pedidos: Pedido[];
   createdAt: string;
 }

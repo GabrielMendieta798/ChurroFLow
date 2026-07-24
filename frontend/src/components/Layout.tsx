@@ -2,6 +2,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ShoppingCart, Receipt, Wallet, Package,
   Boxes, BookOpen, Truck, BarChart3, LogOut, ChevronRight, Users, Tags, Factory,
+  ClipboardList,
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import clsx from 'clsx';
@@ -14,6 +15,8 @@ const nav = [
   { to: '/produccion', label: 'Producción', icon: Factory },
   { to: '/compras', label: 'Compras', icon: Truck },
   { to: '/clientes', label: 'Clientes', icon: Users },
+  { to: '/pedidos', label: 'Pedidos', icon: ClipboardList },
+  { to: '/repartos', label: 'Repartos', icon: Truck },
   { to: '/listas-precio', label: 'Listas de Precio', icon: Tags },
   { to: '/stock', label: 'Stock', icon: BarChart3 },
   { to: '/productos', label: 'Productos', icon: Package },

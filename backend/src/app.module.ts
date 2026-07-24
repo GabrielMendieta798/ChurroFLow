@@ -16,6 +16,9 @@ import { ListasPrecioModule } from './listas-precio/listas-precio.module';
 import { DireccionesEntregaModule } from './direcciones-entrega/direcciones-entrega.module';
 import { SharedModule } from './shared/shared.module';
 import { ProduccionModule } from './produccion/produccion.module';
+import { PedidosModule } from './pedidos/pedidos.module';
+import { RepartosModule } from './repartos/repartos.module';
+import { ZonasRepartoModule } from './zonas-reparto/zonas-reparto.module';
 
 @Module({
   imports: [
@@ -36,6 +39,9 @@ import { ProduccionModule } from './produccion/produccion.module';
     ListasPrecioModule,
     DireccionesEntregaModule,
     ProduccionModule,
+    PedidosModule,
+    RepartosModule,
+    ZonasRepartoModule,
   ],
 })
 export class AppModule {}

@@ -1,7 +1,8 @@
 import api from './client';
 import type {
   Caja, Cliente, Compra, DashboardResumen, DireccionEntrega, Insumo, ListaPrecio,
-  OrdenProduccion, Producto, Proveedor, StockMovimiento, User, Venta,
+  OrdenProduccion, Pedido, Producto, Proveedor, Reparto, StockMovimiento, User, Venta,
+  ZonaReparto,
 } from '../types';
 
 // Auth
@@ -151,4 +152,46 @@ export const produccionApi = {
     api.post<OrdenProduccion>('/produccion', data),
   updateEstado: (id: string, estado: string) =>
     api.patch<OrdenProduccion>(`/produccion/${id}/estado`, { estado }),
+};
+
+// Pedidos
+export const pedidosApi = {
+  getAll: (estado?: string) => {
+    const params = estado ? `?estado=${estado}` : '';
+    return api.get<Pedido[]>(`/pedidos${params}`);
+  },
+  getOne: (id: string) => api.get<Pedido>(`/pedidos/${id}`),
+  create: (data: {
+    clienteId: string;
+    direccionEntregaId?: string;
+    observaciones?: string;
+    fechaEntrega?: string;
+    items: { productoId: string; cantidad: number; precioUnit: number }[];
+  }) => api.post<Pedido>('/pedidos', data),
+  updateEstado: (id: string, estado: string) =>
+    api.patch<Pedido>(`/pedidos/${id}/estado`, { estado }),
+};
+
+// Repartos
+export const repartosApi = {
+  getAll: (estado?: string) => {
+    const params = estado ? `?estado=${estado}` : '';
+    return api.get<Reparto[]>(`/repartos${params}`);
+  },
+  getOne: (id: string) => api.get<Reparto>(`/repartos/${id}`),
+  create: (data: { zonaRepartoId?: string; observaciones?: string; pedidoIds?: string[] }) =>
+    api.post<Reparto>('/repartos', data),
+  updateEstado: (id: string, estado: string) =>
+    api.patch<Reparto>(`/repartos/${id}/estado`, { estado }),
+  assignPedidos: (id: string, pedidoIds: string[]) =>
+    api.patch<Reparto>(`/repartos/${id}/assign`, { pedidoIds }),
+};
+
+// Zonas de Reparto
+export const zonasRepartoApi = {
+  getAll: () => api.get<ZonaReparto[]>('/zonas-reparto'),
+  create: (data: { nombre: string }) => api.post<ZonaReparto>('/zonas-reparto', data),
+  update: (id: string, data: { nombre: string }) =>
+    api.put<ZonaReparto>(`/zonas-reparto/${id}`, data),
+  remove: (id: string) => api.delete(`/zonas-reparto/${id}`),
 };

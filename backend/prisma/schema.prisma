@@ -78,6 +78,22 @@ enum EstadoProduccion {
   CANCELADA
 }
 
+enum EstadoPedido {
+  BORRADOR
+  CONFIRMADO
+  PREPARANDO
+  LISTO
+  EN_ENTREGA
+  ENTREGADO
+  CANCELADO
+}
+
+enum EstadoReparto {
+  PENDIENTE
+  EN_CURSO
+  COMPLETADO
+}
+
 // ─── Modelos ─────────────────────────────────────────────
 
 model User {
@@ -119,6 +135,7 @@ model Producto {
   ventaItems            VentaItem[]
   listaPrecioItems     ListaPrecioItem[]
   ordenProducciones    OrdenProduccion[]
+  pedidoItems          PedidoItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -287,6 +304,7 @@ model Cliente {
   listaPrecio    ListaPrecio?       @relation(fields: [listaPrecioId], references: [id])
   direcciones    DireccionEntrega[]
   ventas         Venta[]
+  pedidos        Pedido[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -306,6 +324,7 @@ model DireccionEntrega {
   ciudad    String?
   notas     String?
   activo    Boolean @default(true)
+  pedidos   Pedido[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -412,6 +431,78 @@ model OrdenProduccion {
   @@index([estado])
   @@index([createdAt])
   @@map("ordenes_produccion")
+}
+
+model Pedido {
+  id               String        @id @default(uuid())
+  numero           String        @unique
+  clienteId        String
+  cliente          Cliente       @relation(fields: [clienteId], references: [id])
+  direccionEntregaId String?
+  direccionEntrega DireccionEntrega? @relation(fields: [direccionEntregaId], references: [id])
+  estado           EstadoPedido  @default(BORRADOR)
+  observaciones    String?
+  fechaEntrega     DateTime?
+  repartoId        String?
+  reparto          Reparto?      @relation(fields: [repartoId], references: [id])
+  items            PedidoItem[]
+  total            Decimal       @db.Decimal(10, 2)
+  deletedAt        DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([clienteId])
+  @@index([estado])
+  @@index([fechaEntrega])
+  @@map("pedidos")
+}
+
+model PedidoItem {
+  id         String   @id @default(uuid())
+  pedidoId   String
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  productoId String
+  producto   Producto @relation(fields: [productoId], references: [id])
+  cantidad   Int
+  precioUnit Decimal  @db.Decimal(10, 2)
+  subtotal   Decimal  @db.Decimal(10, 2)
+
+  @@map("pedido_items")
+}
+
+model ZonaReparto {
+  id       String  @id @default(uuid())
+  nombre   String
+  activo   Boolean @default(true)
+  repartos Reparto[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("zonas_reparto")
+}
+
+model Reparto {
+  id              String            @id @default(uuid())
+  numero          String            @unique
+  zonaRepartoId   String?
+  zonaReparto     ZonaReparto?      @relation(fields: [zonaRepartoId], references: [id])
+  estado          EstadoReparto     @default(PENDIENTE)
+  fecha           DateTime          @default(now())
+  observaciones   String?
+  pedidos         Pedido[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+
+  @@index([zonaRepartoId])
+  @@index([estado])
+  @@map("repartos")
 }
 
 model Secuencia {

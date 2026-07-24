@@ -14,6 +14,8 @@ import Ventas from './pages/Ventas';
 import Clientes from './pages/Clientes';
 import ListasPrecio from './pages/ListasPrecio';
 import Produccion from './pages/Produccion';
+import Pedidos from './pages/Pedidos';
+import Repartos from './pages/Repartos';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((s) => s.token);
@@ -45,6 +47,8 @@ export default function App() {
           <Route path="recetas" element={<Recetas />} />
           <Route path="compras" element={<Compras />} />
           <Route path="clientes" element={<Clientes />} />
+          <Route path="pedidos" element={<Pedidos />} />
+          <Route path="repartos" element={<Repartos />} />
           <Route path="listas-precio" element={<ListasPrecio />} />
           <Route path="stock" element={<Stock />} />
         </Route>
