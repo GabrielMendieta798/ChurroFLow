@@ -6,11 +6,16 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret || jwtSecret.length < 32) {
+  throw new Error('JWT_SECRET es obligatorio y debe tener al menos 32 caracteres');
+}
+
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET ?? 'secret',
+      secret: jwtSecret,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN ?? '8h' },
     }),
   ],

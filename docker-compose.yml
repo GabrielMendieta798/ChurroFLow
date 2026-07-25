@@ -7,10 +7,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-churreria}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-churreria123}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es obligatorio}
       POSTGRES_DB: ${POSTGRES_DB:-churreria_db}
-    ports:
-      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -29,8 +27,8 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-churreria}:${POSTGRES_PASSWORD:-churreria123}@postgres:5432/${POSTGRES_DB:-churreria_db}
-      JWT_SECRET: ${JWT_SECRET:-super_secret_jwt_key_change_in_prod}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-churreria}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es obligatorio}@postgres:5432/${POSTGRES_DB:-churreria_db}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET es obligatorio}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
       PORT: 3000
     ports:
