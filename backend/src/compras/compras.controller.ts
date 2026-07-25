@@ -2,8 +2,9 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ComprasService } from './compras.service';
 import { CreateCompraDto } from './dto/create-compra.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('compras')
 export class ComprasController {
   constructor(private comprasService: ComprasService) {}

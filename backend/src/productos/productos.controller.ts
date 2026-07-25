@@ -3,8 +3,10 @@ import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PricingService } from '../shared/pricing.service';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('productos')
 export class ProductosController {
   constructor(
@@ -34,21 +36,25 @@ export class ProductosController {
   }
 
   @Post()
+  @Roles('ADMIN')
   create(@Body() dto: CreateProductoDto) {
     return this.productosService.create(dto);
   }
 
   @Put(':id')
+  @Roles('ADMIN')
   update(@Param('id') id: string, @Body() dto: Partial<CreateProductoDto>) {
     return this.productosService.update(id, dto);
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   remove(@Param('id') id: string) {
     return this.productosService.remove(id);
   }
 
   @Patch(':id/toggle')
+  @Roles('ADMIN')
   toggleActivo(@Param('id') id: string) {
     return this.productosService.toggleActivo(id);
   }

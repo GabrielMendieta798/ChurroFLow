@@ -1,5 +1,6 @@
 import { PrismaClient, Categoria, UnidadMedida, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -25,6 +26,17 @@ async function main() {
       email: 'empleado@churreria.com',
       password: await bcrypt.hash('empleado123', 10),
       role: Role.EMPLEADO,
+    },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'demo@churroflow.app' },
+    update: { role: Role.DEMO, activo: true },
+    create: {
+      nombre: 'Visitante Demo',
+      email: 'demo@churroflow.app',
+      password: await bcrypt.hash(randomBytes(48).toString('hex'), 10),
+      role: Role.DEMO,
     },
   });
 

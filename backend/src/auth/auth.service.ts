@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -17,6 +17,19 @@ export class AuthService {
 
     const valid = await bcrypt.compare(dto.password, user.password);
     if (!valid) throw new UnauthorizedException('Credenciales inválidas');
+
+    const token = this.jwt.sign({ sub: user.id, email: user.email });
+    return {
+      access_token: token,
+      user: { id: user.id, nombre: user.nombre, email: user.email, role: user.role },
+    };
+  }
+
+  async demo() {
+    if (process.env.DEMO_MODE !== 'true') throw new NotFoundException();
+
+    const user = await this.prisma.user.findUnique({ where: { email: 'demo@churroflow.app' } });
+    if (!user || !user.activo || user.role !== 'DEMO') throw new NotFoundException();
 
     const token = this.jwt.sign({ sub: user.id, email: user.email });
     return {

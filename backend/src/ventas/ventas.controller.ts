@@ -2,8 +2,9 @@ import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@
 import { VentasService } from './ventas.service';
 import { CreateVentaDto } from './dto/create-venta.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('ventas')
 export class VentasController {
   constructor(private ventasService: VentasService) {}

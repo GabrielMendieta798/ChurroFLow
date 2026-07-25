@@ -2,8 +2,9 @@ import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@ne
 import { PedidosService } from './pedidos.service';
 import { CreatePedidoDto, UpdateEstadoPedidoDto } from './dto/create-pedido.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('pedidos')
 export class PedidosController {
   constructor(private pedidosService: PedidosService) {}

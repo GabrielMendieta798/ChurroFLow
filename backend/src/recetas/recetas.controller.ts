@@ -2,8 +2,10 @@ import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/c
 import { RecetasService } from './recetas.service';
 import { CreateRecetaDto } from './dto/create-receta.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('recetas')
 export class RecetasController {
   constructor(private recetasService: RecetasService) {}
@@ -19,11 +21,13 @@ export class RecetasController {
   }
 
   @Post()
+  @Roles('ADMIN')
   upsert(@Body() dto: CreateRecetaDto) {
     return this.recetasService.upsert(dto);
   }
 
   @Delete('producto/:productoId')
+  @Roles('ADMIN')
   remove(@Param('productoId') productoId: string) {
     return this.recetasService.remove(productoId);
   }

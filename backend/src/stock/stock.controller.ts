@@ -2,8 +2,10 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { StockService } from './stock.service';
 import { AjusteStockDto } from './dto/ajuste-stock.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('stock')
 export class StockController {
   constructor(private stockService: StockService) {}
@@ -19,6 +21,7 @@ export class StockController {
   }
 
   @Post('ajuste')
+  @Roles('ADMIN')
   ajustar(@Body() dto: AjusteStockDto) {
     return this.stockService.ajustar(dto);
   }

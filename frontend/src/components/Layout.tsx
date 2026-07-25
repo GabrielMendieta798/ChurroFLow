@@ -2,27 +2,33 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ShoppingCart, Receipt, Wallet, Package,
   Boxes, BookOpen, Truck, BarChart3, LogOut, ChevronRight, Users, Tags, Factory,
-  ClipboardList, DollarSign,
+  ClipboardList, DollarSign, UserCog,
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import clsx from 'clsx';
+import type { Role } from '../types';
+
+const allRoles: Role[] = ['ADMIN', 'EMPLEADO', 'DEMO'];
+const staffRoles: Role[] = ['ADMIN', 'EMPLEADO'];
+const adminAndDemo: Role[] = ['ADMIN', 'DEMO'];
 
 const nav = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/pos', label: 'Punto de Venta', icon: ShoppingCart },
-  { to: '/ventas', label: 'Ventas', icon: Receipt },
-  { to: '/caja', label: 'Caja', icon: Wallet },
-  { to: '/produccion', label: 'Producción', icon: Factory },
-  { to: '/compras', label: 'Compras', icon: Truck },
-  { to: '/clientes', label: 'Clientes', icon: Users },
-  { to: '/pedidos', label: 'Pedidos', icon: ClipboardList },
-  { to: '/repartos', label: 'Repartos', icon: Truck },
-  { to: '/finanzas', label: 'Finanzas', icon: DollarSign },
-  { to: '/listas-precio', label: 'Listas de Precio', icon: Tags },
-  { to: '/stock', label: 'Stock', icon: BarChart3 },
-  { to: '/productos', label: 'Productos', icon: Package },
-  { to: '/insumos', label: 'Insumos', icon: Boxes },
-  { to: '/recetas', label: 'Recetas', icon: BookOpen },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: adminAndDemo },
+  { to: '/pos', label: 'Punto de Venta', icon: ShoppingCart, roles: staffRoles },
+  { to: '/ventas', label: 'Ventas', icon: Receipt, roles: allRoles },
+  { to: '/caja', label: 'Caja', icon: Wallet, roles: staffRoles },
+  { to: '/produccion', label: 'Producción', icon: Factory, roles: allRoles },
+  { to: '/compras', label: 'Compras', icon: Truck, roles: allRoles },
+  { to: '/clientes', label: 'Clientes', icon: Users, roles: staffRoles },
+  { to: '/pedidos', label: 'Pedidos', icon: ClipboardList, roles: staffRoles },
+  { to: '/repartos', label: 'Repartos', icon: Truck, roles: staffRoles },
+  { to: '/finanzas', label: 'Finanzas', icon: DollarSign, roles: ['ADMIN'] as Role[] },
+  { to: '/usuarios', label: 'Usuarios', icon: UserCog, roles: ['ADMIN'] as Role[] },
+  { to: '/listas-precio', label: 'Listas de Precio', icon: Tags, roles: adminAndDemo },
+  { to: '/stock', label: 'Stock', icon: BarChart3, roles: adminAndDemo },
+  { to: '/productos', label: 'Productos', icon: Package, roles: adminAndDemo },
+  { to: '/insumos', label: 'Insumos', icon: Boxes, roles: adminAndDemo },
+  { to: '/recetas', label: 'Recetas', icon: BookOpen, roles: adminAndDemo },
 ];
 
 export default function Layout() {
@@ -44,7 +50,7 @@ export default function Layout() {
         </div>
 
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          {nav.map(({ to, label, icon: Icon }) => (
+          {nav.filter(({ roles }) => user && roles.includes(user.role)).map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}

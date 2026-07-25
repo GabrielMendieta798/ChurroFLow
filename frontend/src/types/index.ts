@@ -1,4 +1,4 @@
-export type Role = 'ADMIN' | 'EMPLEADO';
+export type Role = 'ADMIN' | 'EMPLEADO' | 'DEMO';
 export type Categoria = 'CHURRO' | 'DOCENA' | 'CAFE' | 'COMBO' | 'BEBIDA' | 'OTRO';
 export type UnidadMedida = 'GRAMO' | 'KILOGRAMO' | 'MILILITRO' | 'LITRO' | 'UNIDAD';
 export type MetodoPago = 'EFECTIVO' | 'TRANSFERENCIA' | 'MERCADO_PAGO';

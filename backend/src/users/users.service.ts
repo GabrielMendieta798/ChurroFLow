@@ -1,4 +1,4 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { BadRequestException, Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -14,12 +14,15 @@ export class UsersService {
   }
 
   async create(dto: CreateUserDto) {
+    if (dto.role === 'DEMO') {
+      throw new BadRequestException('El perfil DEMO se administra desde la configuración del sistema');
+    }
     const exists = await this.prisma.user.findUnique({ where: { email: dto.email } });
     if (exists) throw new ConflictException('El email ya está registrado');
     const hashed = await bcrypt.hash(dto.password, 10);
     return this.prisma.user.create({
       data: { ...dto, password: hashed },
-      select: { id: true, nombre: true, email: true, role: true, createdAt: true },
+      select: { id: true, nombre: true, email: true, role: true, activo: true, createdAt: true },
     });
   }
 

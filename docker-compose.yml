@@ -30,6 +30,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-churreria}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es obligatorio}@postgres:5432/${POSTGRES_DB:-churreria_db}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET es obligatorio}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      DEMO_MODE: ${DEMO_MODE:-false}
       PORT: 3000
     ports:
       - '3000:3000'
@@ -47,6 +48,7 @@ services:
       - backend
     environment:
       VITE_API_URL: http://localhost:3000
+      VITE_DEMO_MODE: ${DEMO_MODE:-false}
     ports:
       - '5173:5173'
     volumes:

@@ -2,8 +2,10 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { DireccionesEntregaService } from './direcciones-entrega.service';
 import { CreateDireccionEntregaDto } from './dto/create-direccion-entrega.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('direcciones-entrega')
 export class DireccionesEntregaController {
   constructor(private service: DireccionesEntregaService) {}
@@ -29,6 +31,7 @@ export class DireccionesEntregaController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   remove(@Param('id') id: string) {
     return this.service.remove(id);
   }

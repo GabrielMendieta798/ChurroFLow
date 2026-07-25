@@ -9,6 +9,7 @@ import type {
 export const authApi = {
   login: (email: string, password: string) =>
     api.post<{ access_token: string; user: User }>('/auth/login', { email, password }),
+  demo: () => api.post<{ access_token: string; user: User }>('/auth/demo'),
   me: () => api.get<User>('/auth/me'),
 };
 
@@ -110,6 +111,7 @@ export const proveedoresApi = {
 export const usersApi = {
   getAll: () => api.get<User[]>('/users'),
   create: (data: Partial<User> & { password: string }) => api.post<User>('/users', data),
+  toggleActivo: (id: string) => api.patch<Pick<User, 'id' | 'nombre' | 'activo'>>(`/users/${id}/toggle`),
 };
 
 // Clientes

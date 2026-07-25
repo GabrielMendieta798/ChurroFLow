@@ -4,8 +4,8 @@ import { useAuthStore } from '../store/authStore';
 import { authApi } from '../api/endpoints';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@churreria.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -18,9 +18,23 @@ export default function Login() {
     try {
       const { data } = await authApi.login(email, password);
       setAuth(data.user, data.access_token);
-      navigate('/dashboard');
+      navigate('/');
     } catch {
       setError('Email o contraseña incorrectos');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemo = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const { data } = await authApi.demo();
+      setAuth(data.user, data.access_token);
+      navigate('/');
+    } catch {
+      setError('La demo no está disponible');
     } finally {
       setLoading(false);
     }
@@ -61,6 +75,17 @@ export default function Login() {
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
         </form>
+
+        {import.meta.env.VITE_DEMO_MODE === 'true' && (
+          <button
+            type="button"
+            disabled={loading}
+            onClick={handleDemo}
+            className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Ver demo sin iniciar sesión
+          </button>
+        )}
       </div>
     </div>
   );

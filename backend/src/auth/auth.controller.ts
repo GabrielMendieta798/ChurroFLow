@@ -12,6 +12,11 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @Post('demo')
+  demo() {
+    return this.authService.demo();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('me')
   me(@Request() req) {
