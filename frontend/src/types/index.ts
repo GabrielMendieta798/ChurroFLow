@@ -248,3 +248,41 @@ export interface Reparto {
   pedidos: Pedido[];
   createdAt: string;
 }
+
+export interface ResumenFinanciero {
+  periodo: { desde: string; hasta: string };
+  ingresos: { ventas: number; pedidos: number; otros: number; total: number };
+  egresos: { compras: number; otros: number; total: number };
+  gananciaNeta: number;
+  margen: number;
+  cantidadVentas: number;
+  cantidadPedidos: number;
+  ticketPromedio: number;
+}
+
+export interface FlujoCajaDia {
+  fecha: string;
+  ingresos: number;
+  egresos: number;
+  saldo: number;
+}
+
+export interface CostoProducto {
+  id: string;
+  nombre: string;
+  categoria: Categoria;
+  precioVenta: number;
+  costoCompra: number;
+  costoMateriaPrima: number;
+  gananciaUnitaria: number;
+  margen: number;
+  stockActual: number;
+}
+
+export interface TopProducto {
+  id: string;
+  nombre: string;
+  categoria: Categoria;
+  unidadesVendidas: number;
+  ingresos: number;
+}

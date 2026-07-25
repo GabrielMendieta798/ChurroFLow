@@ -19,6 +19,7 @@ import { ProduccionModule } from './produccion/produccion.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { RepartosModule } from './repartos/repartos.module';
 import { ZonasRepartoModule } from './zonas-reparto/zonas-reparto.module';
+import { FinanzasModule } from './finanzas/finanzas.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ZonasRepartoModule } from './zonas-reparto/zonas-reparto.module';
     PedidosModule,
     RepartosModule,
     ZonasRepartoModule,
+    FinanzasModule,
   ],
 })
 export class AppModule {}

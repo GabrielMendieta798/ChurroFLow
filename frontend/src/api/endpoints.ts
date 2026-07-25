@@ -1,8 +1,8 @@
 import api from './client';
 import type {
-  Caja, Cliente, Compra, DashboardResumen, DireccionEntrega, Insumo, ListaPrecio,
-  OrdenProduccion, Pedido, Producto, Proveedor, Reparto, StockMovimiento, User, Venta,
-  ZonaReparto,
+  Caja, Cliente, Compra, CostoProducto, DashboardResumen, DireccionEntrega, FlujoCajaDia,
+  Insumo, ListaPrecio, OrdenProduccion, Pedido, Producto, Proveedor, Reparto, ResumenFinanciero,
+  StockMovimiento, TopProducto, User, Venta, ZonaReparto,
 } from '../types';
 
 // Auth
@@ -194,4 +194,27 @@ export const zonasRepartoApi = {
   update: (id: string, data: { nombre: string }) =>
     api.put<ZonaReparto>(`/zonas-reparto/${id}`, data),
   remove: (id: string) => api.delete(`/zonas-reparto/${id}`),
+};
+
+// Finanzas
+export const finanzasApi = {
+  getResumen: (fechaDesde?: string, fechaHasta?: string) => {
+    const params = new URLSearchParams();
+    if (fechaDesde) params.append('fechaDesde', fechaDesde);
+    if (fechaHasta) params.append('fechaHasta', fechaHasta);
+    return api.get<ResumenFinanciero>(`/finanzas/resumen?${params}`);
+  },
+  getFlujoCaja: (fechaDesde?: string, fechaHasta?: string) => {
+    const params = new URLSearchParams();
+    if (fechaDesde) params.append('fechaDesde', fechaDesde);
+    if (fechaHasta) params.append('fechaHasta', fechaHasta);
+    return api.get<{ flujo: FlujoCajaDia[]; porMetodoPago: Record<string, number> }>(`/finanzas/flujo-caja?${params}`);
+  },
+  getCostosPorProducto: () => api.get<CostoProducto[]>('/finanzas/costos-producto'),
+  getTopProductos: (fechaDesde?: string, fechaHasta?: string) => {
+    const params = new URLSearchParams();
+    if (fechaDesde) params.append('fechaDesde', fechaDesde);
+    if (fechaHasta) params.append('fechaHasta', fechaHasta);
+    return api.get<TopProducto[]>(`/finanzas/top-productos?${params}`);
+  },
 };
